@@ -28,7 +28,7 @@ public class Simulator {
     }
 	
 	public static void parseInput(String[] args) {
-		ArrayList<Tile> tiles = new ArrayList<Tile>();
+		tiles = new ArrayList<Tile>();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
