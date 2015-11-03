@@ -1,0 +1,33 @@
+// Do not change the format of this segment. Leave spaces padding the = signs.
+p = 4
+n1 = 7
+n2 = 10
+b = 4
+a1 = 1
+a2 = 1
+C = 1000000
+d = 4
+d1 = 20
+
+// It is safe to add any information after this line.
+
+The chip has 2^p tiles.
+Each core has an L1 cache of size 2^n1 bytes.
+Each core is also associated with a segment of the L2 of size 2^n2 bytes.
+The block size in L1 and L2 is 2^b bytes.
+The associativity of L1 is 2^a1, and for L2 is 2^a2.
+L2 entries are interleaved at the page level, so bits 12 to 12 + (p-1) indicate the home tile (meaning p <= 20).
+Values d and d1 seem pretty arbitrary, but d is the L2 access delay (on L1 miss), and d1 is the memory access delay (on L2 miss).
+Not sure why we have to specify C!
+
+High order  ----------------- Low order
+.... .... .... .... .... [.... .... ....]
+                           1 page / 4KB
+						   
+31                        11           0
+
+
+// Current values
+b = 4 --> Block size is 2^4 or 16 bytes = 4 words.
+n1 = 7 --> L1 caches have 2^(n1 - b) entries (blocks), 2^(7-4) = 2^3 = 8 entries, 2^(3 - a1) = 2^2 = 4 sets.
+n2 = 10 --> L2 caches have 2^(n2 - b) blocks, 2^(10 - 4) = 2^6 = 64 entries, 2^(6 - a2) = 2^5 = 32 sets.
