@@ -18,8 +18,9 @@ public class L1Cache {
 		int cacheIndex = Block.cacheIndex(address, p, b, n, a);
 		for(int way = 0; way < a; way++) {
 			if(cache[way][cacheIndex] != null) {
+				L1CacheEntry entry = cache[way][cacheIndex];
 				int tag = Block.tag(address, p, b, n, a);
-				if(cache[way][cacheIndex].getTag() == tag) {
+				if(entry.getTag() == tag && entry.getState() == Block.MSIState.SHARED) {
 					return true;
 				}
 			}

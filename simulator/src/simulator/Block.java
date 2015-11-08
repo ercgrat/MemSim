@@ -5,6 +5,10 @@ public class Block {
 	private static final int wordSize = 32;
 	private static final int pageSize = 12;
 	
+	public enum MSIState {
+		MODIFIED, SHARED, INVALID
+	}
+	
 	static int page(int address, int p) {
 		return (address / (int)Math.pow(2, pageSize)) % (int)Math.pow(2, p);
 	}
