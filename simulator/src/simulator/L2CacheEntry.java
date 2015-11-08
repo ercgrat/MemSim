@@ -1,10 +1,10 @@
 package simulator;
 
-public class L2Directory extends Directory {
+public class L2CacheEntry extends L1CacheEntry {
 	
 	boolean[] ownerArray;
 	
-	public L2Directory(int p) {
+	public L2CacheEntry(int p) {
 		super();
 		ownerArray = new boolean[p];
 	}

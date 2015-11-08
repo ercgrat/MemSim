@@ -11,11 +11,11 @@ public class Access {
 		this.read = read;
 	}
 	
-	public int cycle() {
+	public int getCycle() {
 		return cycle;
 	}
 	
-	public int address() {
+	public int getAddress() {
 		return address;
 	}
 

@@ -2,20 +2,14 @@ package simulator;
 
 public class Block {
 
-	private final int wordSize = 32;
-	private final int pageSize = 12;
-
-	private int address;
+	private static final int wordSize = 32;
+	private static final int pageSize = 12;
 	
-	public Block(int address) {
-		this.address = address;
-	}
-	
-	public int page(int p) {
+	static int page(int address, int p) {
 		return (address / (int)Math.pow(2, pageSize)) % (int)Math.pow(2, p);
 	}
 	
-	public int cacheIndex(int b, int n, int a, int p) {
+	static int cacheIndex(int address, int p, int b, int n, int a) {
 		int indexSize = n - a;
 		int withoutBlock = address / (int)Math.pow(2, b);
 		if(indexSize + b > pageSize) {
@@ -27,6 +21,19 @@ public class Block {
 			return lowerSegment + upperSegment;			
 		} else {
 			return withoutBlock % (int)Math.pow(2, indexSize);
+		}
+	}
+	
+	static int tag(int address, int p, int b, int n, int a) {
+		int indexSize = n - a;
+		int tagSize = wordSize - (p + indexSize + b);
+		if(indexSize + b > pageSize) {
+			return address / (int)Math.pow(2, wordSize - tagSize);
+		} else {
+			int withoutIndexAndBlock = address / (int)Math.pow(2, indexSize + b);
+			int lowerSegment = withoutIndexAndBlock % (int)Math.pow(2, pageSize - (indexSize + b));
+			int upperSegment = withoutIndexAndBlock / (int) Math.pow(2, p + (pageSize - (indexSize + b)));
+			return lowerSegment + upperSegment;
 		}
 	}
 	
