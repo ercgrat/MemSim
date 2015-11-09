@@ -15,11 +15,11 @@ public class L1CacheEntry {
 		return tag;
 	}
         
-        public void setTag(int tag) {
+    public void setTag(int tag) {
 		this.tag = tag;
 	}
         
-        public void setState(Block.MSIState state) {
+    public void setState(Block.MSIState state) {
 		this.state = state;
 	}
 	
@@ -27,8 +27,8 @@ public class L1CacheEntry {
 		return state;
 	}
         
-        public void touchedThisCycle(int cycle){
-            lastCycleUsed = cycle;
-        }
+	public void touch(int cycle){
+		lastCycleUsed = cycle;
+	}
 
 }

@@ -25,6 +25,14 @@ public class Simulator {
 		}
 		
         parseInput(args);
+		
+		int cycle = 0;
+		while(cycle < C) {
+			for(int i = 0; i < tiles.size(); i++) {
+				tiles.get(i).cycle(cycle, i);
+			}
+			cycle++;
+		}
     }
 	
 	public static void parseInput(String[] args) {
