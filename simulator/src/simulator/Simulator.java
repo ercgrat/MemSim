@@ -50,8 +50,8 @@ public class Simulator {
 			System.out.println(e);
 		}
 		
-		for(int i = 0; i < p; i++) {
-			tiles.add(new Tile(tiles, p, b, n1, n2, a1, a2, d, d1));
+		for(int i = 0; i < (int)Math.pow(2,p); i++) {
+			tiles.add(new Tile(tiles, p, b, n1, n2, a1, a2, d, d1, C));
 		}
 		
 		try {

@@ -4,15 +4,18 @@ import java.util.*;
 
 public class Tile {
 	
-	private final int p, b, n1, n2, a1, a2, d, d1;
+	private final int p, b, n1, n2, a1, a2, d, d1, C;
 	
 	private int totalDelay;
 	private ArrayList<Tile> tiles;
 	private ArrayList<Access> ops;
+        private ArrayList<Access> receives;
+        private ArrayList<Access> requests;
 	private L1Cache L1;
 	private L2Cache L2;
+        private boolean waiting;
 
-	public Tile(ArrayList<Tile> tiles, int p, int b, int n1, int n2, int a1, int a2, int d, int d1) {
+	public Tile(ArrayList<Tile> tiles, int p, int b, int n1, int n2, int a1, int a2, int d, int d1, int C) {
 		this.tiles = tiles;
 		this.p = p;
 		this.b = b;
@@ -22,9 +25,13 @@ public class Tile {
 		this.a2 = a2;
 		this.d = d;
 		this.d1 = d1;
+                this.C = C;
 		
-		totalDelay = 0;
+		waiting = false;
+                totalDelay = 0;
 		ops = new ArrayList<Access>();
+                requests = new ArrayList<Access>();
+                receives = new ArrayList<Access>();
 		L1 = new L1Cache(p, b, n1, a1);
 		L2 = new L2Cache(p, b, n2, a2);
 	}
@@ -33,21 +40,54 @@ public class Tile {
 		ops.add(access);
 	}
 	
-	public void cycle(int cycle) {
-		if(ops.size() == 0) {
+        public void setRequest(int futureCycle, int address, boolean accessType, int requestor){
+            Access access = new Access(futureCycle, address, accessType);
+            access.setRequestor(requestor);
+            requests.add(access);
+        }
+        
+	public void cycle(int cycle, int tileNum) {
+            L2cycle(cycle, tileNum);
+            if(!waiting){
+                if(ops.size() == 0) {
 			return;
 		}
 		Access access = ops.get(0);
 		if(access.getCycle() == cycle - totalDelay) {
-			if(L1.hit(access.getAddress())) { // L1 cache hit, just delete the access
-				ops.remove(0);
+			if(L1.hit(access.getAddress(), cycle)) { // L1 cache hit, just delete the access
+                            ops.remove(0);
 			} else {
-				/*
-				* Here's where everything complicated goes!
-				*
-				*/
+                            waiting = true;
+                            int homeTile = Block.page(access.getAddress(), p);
+                            int futureCycle = cycle + d + C * (Block.manhattanDistance(tileNum, homeTile, p) + 1);
+                            tiles.get(homeTile).setRequest(futureCycle, access.getAddress(), access.accessType(), tileNum);
 			}
 		}
+            }
+            else{
+                if(receives.size() > 0){
+                    int rcvSize = receives.size();
+                    int correctRcv = -1;
+                    for(int i =0; i<rcvSize; i++){
+                        if(tileNum!=receives.get(i).getRequestor() && cycle==receives.get(i).getCycle()){
+                            correctRcv = i;
+                            break;
+                        }
+                    }
+                    if(correctRcv != -1){
+                        L1.setEntry(receives.get(correctRcv).getAddress(), cycle, receives.get(correctRcv).state);
+                        ops.remove(0);
+                        receives.remove(correctRcv);
+                        waiting = false;
+                    }
+                    else
+                        totalDelay += 1;
+                }
+            }
 	}
+        
+        private void L2cycle(int cycle, int tileNum){
+            
+        }
 
 }

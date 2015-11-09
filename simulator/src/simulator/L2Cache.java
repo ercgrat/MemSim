@@ -11,7 +11,7 @@ public class L2Cache {
 		this.n = n;
 		this.a = a;
 		
-		cache = new L2CacheEntry[(int)Math.pow(2, a)][(int)Math.pow(2, n - a)];
+		cache = new L2CacheEntry[(int)Math.pow(2, a)][(int)Math.pow(2, n - a - b)];
 	}
 
 }

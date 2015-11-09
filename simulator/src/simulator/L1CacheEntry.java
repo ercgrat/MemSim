@@ -14,9 +14,21 @@ public class L1CacheEntry {
 	public int getTag() {
 		return tag;
 	}
+        
+        public void setTag(int tag) {
+		this.tag = tag;
+	}
+        
+        public void setState(Block.MSIState state) {
+		this.state = state;
+	}
 	
 	public Block.MSIState getState() {
 		return state;
 	}
+        
+        public void touchedThisCycle(int cycle){
+            lastCycleUsed = cycle;
+        }
 
 }

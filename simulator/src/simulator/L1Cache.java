@@ -11,17 +11,38 @@ public class L1Cache {
 		this.n = n;
 		this.a = a;
 		
-		cache = new L1CacheEntry[(int)Math.pow(2, a)][(int)Math.pow(2, n - a)];
+		cache = new L1CacheEntry[(int)Math.pow(2, a)][(int)Math.pow(2, n - a - b)];
 	}
 	
-	public boolean hit(int address) {
-		int cacheIndex = Block.cacheIndex(address, p, b, n, a);
-		for(int way = 0; way < a; way++) {
+        public void setEntry(int address, int cycle, Block.MSIState state){
+            int cacheIndex = Block.L1cacheIndex(address, p, b, n, a);
+            L1CacheEntry entry = new L1CacheEntry();
+            entry.touchedThisCycle(cycle);
+            entry.setState(state);
+            int tag = Block.L1tag(address, p, b, n, a);
+            entry.setTag(tag);
+            for(int way = 0; way < (int)Math.pow(2,a); way++) {
+            	if(cache[way][cacheIndex] == null || Block.MSIState.INVALID == cache[way][cacheIndex].getState()) {
+                    cache[way][cacheIndex] = entry;
+                    return;
+		}
+            }
+            evict(address, entry);
+        }
+        
+        public void evict(int address, L1CacheEntry entry){
+            //TODO
+        }
+        
+	public boolean hit(int address, int cycle) {
+		int cacheIndex = Block.L1cacheIndex(address, p, b, n, a);
+		for(int way = 0; way < (int)Math.pow(2,a); way++) {
 			if(cache[way][cacheIndex] != null) {
 				L1CacheEntry entry = cache[way][cacheIndex];
-				int tag = Block.tag(address, p, b, n, a);
+				int tag = Block.L1tag(address, p, b, n, a);
 				if(entry.getTag() == tag && entry.getState() == Block.MSIState.SHARED) {
-					return true;
+                                    cache[way][cacheIndex].touchedThisCycle(cycle);
+                                    return true;
 				}
 			}
 		}

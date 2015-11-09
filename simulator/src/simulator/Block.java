@@ -13,7 +13,15 @@ public class Block {
 		return (address / (int)Math.pow(2, pageSize)) % (int)Math.pow(2, p);
 	}
 	
-	static int cacheIndex(int address, int p, int b, int n, int a) {
+        static int L1cacheIndex(int address, int p, int b, int n, int a){
+            return (address / (int)Math.pow(2,b)) % (int)Math.pow(2, n - a - b);
+        }
+        
+        static int L1tag(int address, int p, int b, int n, int a){
+            return address / (int)Math.pow(2, n - a);
+        }
+        
+	static int L2cacheIndex(int address, int p, int b, int n, int a) {
 		int indexSize = n - a;
 		int withoutBlock = address / (int)Math.pow(2, b);
 		if(indexSize + b > pageSize) {
@@ -28,7 +36,7 @@ public class Block {
 		}
 	}
 	
-	static int tag(int address, int p, int b, int n, int a) {
+	static int L2tag(int address, int p, int b, int n, int a) {
 		int indexSize = n - a;
 		int tagSize = wordSize - (p + indexSize + b);
 		if(indexSize + b > pageSize) {
@@ -41,4 +49,11 @@ public class Block {
 		}
 	}
 	
+        static int manhattanDistance(int tile1, int tile2, int p){
+            int height = (int)Math.pow(2, p/2);
+            int width = (int)Math.pow(2,p) / height;
+            int heightDiff = Math.abs(((tile1 / width) - (tile2 / width)));
+            int widthDiff = Math.abs(((tile1 % width) - (tile2 % width)));
+            return heightDiff + widthDiff;
+        }
 }
