@@ -26,14 +26,15 @@ public class Access {
 	this.blockOwner = -1;
 	this.isMemAccess = false;
     }
-    
-    public void setToMemAccess(){
+
+    public void setToMemAccess() {
 	this.isMemAccess = true;
     }
-    
-    public boolean isMemAccess(){
+
+    public boolean isMemAccess() {
 	return isMemAccess;
     }
+
     public int getRequester() {
 	return this.requester;
     }
@@ -41,7 +42,7 @@ public class Access {
     public int getOwner() {
 	return this.blockOwner;
     }
-    
+
     public int getCycle() {
 	return cycle;
     }
