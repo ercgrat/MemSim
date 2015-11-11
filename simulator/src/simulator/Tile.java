@@ -66,16 +66,22 @@ public class Tile {
 		int rcvSize = responses.size();
 		int correctRcv = -1;
 		for (int i = 0; i < rcvSize; i++) {
-		    if (tileNum != responses.get(i).getRequester() && cycle == responses.get(i).getCycle()) {
+		    if (!responses.get(i).isMemAccess() && cycle == responses.get(i).getCycle()) {
 			correctRcv = i;
 			break;
 		    }
 		}
 		if (correctRcv != -1) {
-		    L1.setEntry(responses.get(correctRcv).getAddress(), cycle, responses.get(correctRcv).state);
-		    ops.remove(0);
+		    if(-1 != responses.get(correctRcv).getOwner()){
+			L1.setEntry(responses.get(correctRcv).getAddress(), cycle, responses.get(correctRcv).state);
+			ops.remove(0);
+			waiting = false;
+		    } else{
+			int futureCycle = cycle + d + C * (Block.manhattanDistance(tileNum, responses.get(correctRcv).getOwner(), p) + 1);
+			tiles.get(responses.get(correctRcv).getOwner()).setRequest(futureCycle, ops.get(0), tileNum);
+			totalDelay += 1;
+		    }
 		    responses.remove(correctRcv);
-		    waiting = false;
 		} else {
 		    totalDelay += 1;
 		}
@@ -84,5 +90,16 @@ public class Tile {
     }
 
     private void L2cycle(int cycle, int tileNum) {
+	ArrayList<Integer> addressesServiced = new ArrayList<Integer>();
+	for(int i=0; i < requests.size(); i++){
+	    if(cycle == requests.get(i).getCycle()){
+		int addressHomeTile = Block.page(requests.get(i).getAddress(),p);
+		if(tileNum == addressHomeTile){
+		    
+		} else{
+		    
+		}
+	    }
+	}
     }
 }

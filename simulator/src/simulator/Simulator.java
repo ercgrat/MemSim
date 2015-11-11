@@ -23,11 +23,11 @@ public class Simulator {
 	if (args.length < 2) {
 	    System.out.println("Not enough arguments. Run with this format:\n\tjava Simulator <config> <trace file>");
 	}
-
+	int maxCycle = 1000;
 	parseInput(args);
 
 	int cycle = 0;
-	while (cycle < C) {
+	while (cycle < maxCycle) {
 	    for (int i = 0; i < tiles.size(); i++) {
 		tiles.get(i).cycle(cycle, i);
 	    }
