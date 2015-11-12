@@ -8,12 +8,9 @@ public class Tile {
     private int totalDelay;
     private ArrayList<Tile> tiles;
     private ArrayList<Access> ops;
-    private ArrayList<Access> responses;
-    private ArrayList<Access> requests;
     private L1Cache L1;
     private L2Cache L2;
-    private boolean waiting;
-
+    
     public Tile(ArrayList<Tile> tiles, int p, int b, int n1, int n2, int a1, int a2, int d, int d1, int C) {
 	this.tiles = tiles;
 	this.p = p;
@@ -26,11 +23,8 @@ public class Tile {
 	this.d1 = d1;
 	this.C = C;
 
-	waiting = false;
 	totalDelay = 0;
 	ops = new ArrayList<Access>();
-	requests = new ArrayList<Access>();
-	responses = new ArrayList<Access>();
 	L1 = new L1Cache(p, b, n1, a1);
 	L2 = new L2Cache(p, b, n2, a2);
     }
@@ -39,65 +33,56 @@ public class Tile {
 	ops.add(access);
     }
 
-    public void setRequest(int futureCycle, Access access, int tileNum) {
-	Access request = new Access(futureCycle, access.getAddress(), access.accessType(), tileNum);
-	requests.add(request);
-    }
 
     public void cycle(int cycle, int tileNum) {
-	L2cycle(cycle, tileNum);
-	if (!waiting) {
-	    if (ops.size() == 0) {
-		return;
-	    }
-	    Access access = ops.get(0);
-	    if (access.getCycle() == cycle - totalDelay) {
-		if (L1.hit(access.getAddress(), cycle)) { // L1 cache hit, just delete the access
-		    ops.remove(0);
-		} else {
-		    waiting = true;
-		    int homeTile = Block.page(access.getAddress(), p);
-		    int futureCycle = cycle + d + C * (Block.manhattanDistance(tileNum, homeTile, p) + 1);
-		    tiles.get(homeTile).setRequest(futureCycle, access, tileNum);
-		}
-	    }
-	} else {
-	    if (responses.size() > 0) {
-		int rcvSize = responses.size();
-		int correctRcv = -1;
-		for (int i = 0; i < rcvSize; i++) {
-		    if (!responses.get(i).isMemAccess() && cycle == responses.get(i).getCycle()) {
-			correctRcv = i;
-			break;
+	if (ops.size() == 0) {
+	    return;
+	}
+	Access access = ops.get(0);
+	access.setState();
+	if (access.getCycle() == cycle - totalDelay) {
+	    if (!L1.hit(access.getAddress(), cycle)) { // L1 cache miss, all the logic kicks in
+		int homeTile = Block.page(access.getAddress(), p);
+		Block.MSIState homeState = tiles.get(homeTile).getL2State(access.getAddress());
+		boolean[] ownerArray = new boolean[(int)Math.pow(2, p)];
+		if(homeState == Block.MSIState.MODIFIED || homeState == Block.MSIState.SHARED)
+		    ownerArray = tiles.get(homeTile).getOwnerArray(access.getAddress());
+		/*
+		 * Calculate delays
+		 */
+		setL1State(access.getAddress(), cycle, access.state, tileNum); //Set own L1 state
+		tiles.get(homeTile).setL2State(access.getAddress(), cycle, access.state, tileNum);
+		for(int i = 0; i < (int)Math.pow(2, p); i++){
+		    if(i != tileNum && ownerArray[i]){
+			if(access.read){
+			    tiles.get(i).setL1State(access.getAddress(), cycle, Block.MSIState.SHARED, tileNum);
+			}else{
+			    tiles.get(i).setL1State(access.getAddress(), cycle, Block.MSIState.INVALID, tileNum);
+			}
+			
 		    }
 		}
-		if (correctRcv != -1) {
-		    if (-1 != responses.get(correctRcv).getOwner()) {
-			L1.setEntry(responses.get(correctRcv).getAddress(), cycle, responses.get(correctRcv).state);
-			ops.remove(0);
-			waiting = false;
-		    } else {
-			int futureCycle = cycle + d + C * (Block.manhattanDistance(tileNum, responses.get(correctRcv).getOwner(), p) + 1);
-			tiles.get(responses.get(correctRcv).getOwner()).setRequest(futureCycle, ops.get(0), tileNum);
-			totalDelay += 1;
-		    }
-		    responses.remove(correctRcv);
-		} else {
-		    totalDelay += 1;
-		}
+		
 	    }
+	    ops.remove(0);
 	}
     }
 
-    private void L2cycle(int cycle, int tileNum) {
-	ArrayList<Integer> addressesServiced = new ArrayList<Integer>();
-	for (int i = 0; i < requests.size(); i++) {
-	    if (cycle == requests.get(i).getCycle()) {
-		int addressHomeTile = Block.page(requests.get(i).getAddress(), p);
-		if (tileNum == addressHomeTile) {
-		} else {
-		}
-	    }
-	}
+    public Block.MSIState getL2State(int address){ //Get state of block in home tile
+	return Block.MSIState.SHARED;
     }
+    
+    public boolean[] getOwnerArray(int address){ //return owner array, number of entries depends on output of getL2State
+	boolean[] ownerArray = new boolean[(int)Math.pow(2,p)];
+	return ownerArray;
+    }
+    
+    public void setL1State(int address, int cycle, Block.MSIState state, int tileNum){ //
+	//Set state, evict if needed
+    }
+    
+    public void setL2State(int address, int cycle, Block.MSIState state, int tileNum){
+	
+    }
+    
 }

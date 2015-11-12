@@ -6,6 +6,6 @@ public class L2CacheEntry extends L1CacheEntry {
 
     public L2CacheEntry(int p) {
 	super();
-	ownerArray = new boolean[p];
+	ownerArray = new boolean[(int)Math.pow(2,p)];
     }
 }
