@@ -46,8 +46,9 @@ public class Tile {
                 int homeTile = Block.page(access.getAddress(), p);
                 Block.MSIState homeState = tiles.get(homeTile).getL2State(access.getAddress());
                 boolean[] ownerArray = new boolean[(int)Math.pow(2, p)];
-                if(homeState == Block.MSIState.MODIFIED || homeState == Block.MSIState.SHARED)
+                if(homeState == Block.MSIState.MODIFIED || homeState == Block.MSIState.SHARED) {
                     ownerArray = tiles.get(homeTile).getOwnerArray(access.getAddress());
+                }
                 
                 int delay = calculateDelay(access, tileNum, homeTile, homeState);
                 totalDelay += delay;
@@ -63,8 +64,9 @@ public class Tile {
                     boolean[] L2evicteeOwnerArray = new boolean[(int)Math.pow(2, p)];
                     L2evicteeOwnerArray = tiles.get(homeTile).getOwnerArray(L2evictAddress);
                     for(int i = 0; i < (int)Math.pow(2, p); i++) {
-                        if(L2evicteeOwnerArray[i])
+                        if(L2evicteeOwnerArray[i]) {
                             tiles.get(i).setL1State(L2evictAddress, Block.MSIState.INVALID, cycle, false);
+                        }
                     }
                 }
                 

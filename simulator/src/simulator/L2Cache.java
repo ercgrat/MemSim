@@ -80,10 +80,11 @@ public class L2Cache {
     }
     
     public void removeFromOwners(int address, int tileNum){
-	L2CacheEntry entry = getEntry(address);
-	entry.removeFromOwners(tileNum);
-	if(entry.getState() == Block.MSIState.MODIFIED)
-	    entry.setState(Block.MSIState.SHARED);
+        L2CacheEntry entry = getEntry(address);
+        entry.removeFromOwners(tileNum);
+        if(entry.getState() == Block.MSIState.MODIFIED) {
+            entry.setState(Block.MSIState.SHARED);
+        }
     }
     
     public L2CacheEntry getEntry(int address) {
