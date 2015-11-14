@@ -101,19 +101,19 @@ public class Tile {
     }
     
     public int calculateDelay(Access access, int tile, int home, Block.MSIState homeState) {
-        int delay = d + Block.manhattanDistance(tile, home, p) * 2;
+        int delay = d + Block.manhattanDistance(tile, home, p) * 2 * C;
         if(access.accessType()) { // Reading, L1 state is invalid
             if(homeState == Block.MSIState.INVALID) { // L2 miss, need to contact memory controller and load block
-                delay += d1 + Block.manhattanDistance(home, MEMORY_TILE, p) * 2;
+                delay += d1 + Block.manhattanDistance(home, MEMORY_TILE, p) * 2 * C;
             } else if(homeState == Block.MSIState.SHARED) { // L2 hit, no additional penalty
                 // :)
             } else if(homeState == Block.MSIState.MODIFIED) { // L2 miss, need to contact the current owner
                 int owner = L2.getOwner(access.getAddress());
-                delay += Block.manhattanDistance(home, owner, p) * 2;
+                delay += Block.manhattanDistance(home, owner, p) * 2 * C;
             }
         } else { // Writing, L1 state is shared or invalid
             if(homeState == Block.MSIState.INVALID) { // L2 miss, need to contact memory controller and load block
-                delay += d1 + Block.manhattanDistance(home, MEMORY_TILE, p) * 2;
+                delay += d1 + Block.manhattanDistance(home, MEMORY_TILE, p) * 2 * C;
             } else if(homeState == Block.MSIState.SHARED) { // L2 hit, no additional penalty
                 // :)
             } else if(homeState == Block.MSIState.MODIFIED) { // L2 miss, need to invalidate owners, but no penalty

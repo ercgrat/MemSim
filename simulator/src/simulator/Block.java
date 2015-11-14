@@ -59,6 +59,6 @@ public class Block {
         int width = (int) Math.pow(2, p) / height;
         int heightDiff = Math.abs(((tile1 / width) - (tile2 / width)));
         int widthDiff = Math.abs(((tile1 % width) - (tile2 % width)));
-        return heightDiff + widthDiff;
+        return heightDiff + widthDiff + 1;
     }
 }
