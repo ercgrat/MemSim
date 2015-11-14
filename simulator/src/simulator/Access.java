@@ -4,9 +4,8 @@ public class Access {
 
     private int cycle, address;
     boolean read;
-    public Block.MSIState state;
+    private Block.MSIState state;
     
-
     public Access(int cycle, int address, boolean read) {
         this.cycle = cycle;
         this.address = address;
@@ -25,7 +24,11 @@ public class Access {
         return read;
     }
     
-    public void setState(){
+    public Block.MSIState getState() {
+        return state;
+    }
+    
+    public void setState() {
         if(read)
             state = Block.MSIState.SHARED;
         else
