@@ -8,27 +8,27 @@ public class Access {
     
 
     public Access(int cycle, int address, boolean read) {
-	this.cycle = cycle;
-	this.address = address;
-	this.read = read;
+        this.cycle = cycle;
+        this.address = address;
+        this.read = read;
     }
 
     public int getCycle() {
-	return cycle;
+        return cycle;
     }
 
     public int getAddress() {
-	return address;
+        return address;
     }
 
     public boolean accessType() {
-	return read;
+        return read;
     }
     
     public void setState(){
-	if(read)
-	    state = Block.MSIState.SHARED;
-	else
-	    state = Block.MSIState.MODIFIED;
+        if(read)
+            state = Block.MSIState.SHARED;
+        else
+            state = Block.MSIState.MODIFIED;
     }
 }
