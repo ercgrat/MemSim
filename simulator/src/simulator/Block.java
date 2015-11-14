@@ -13,8 +13,12 @@ public class Block {
     static int page(int address, int p) {
         return (address / (int) Math.pow(2, pageSize)) % (int) Math.pow(2, p);
     }
+    
+    static int reconstructAddress(int tag, int L2index, int cacheIndex, int p, int b, int n, int a) {
+        return 0;
+    }
 
-    static int L1cacheIndex(int address, int p, int b, int n, int a) {
+    static int L1cacheIndex(int address, int b, int n, int a) {
         return (address / (int) Math.pow(2, b)) % (int) Math.pow(2, n - a - b);
     }
 

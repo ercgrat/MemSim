@@ -6,8 +6,9 @@ public class L1CacheEntry {
     protected Block.MSIState state;
     protected int lastCycleUsed;
 
-    public L1CacheEntry() {
-        state = Block.MSIState.SHARED;
+    public L1CacheEntry(int tag, Block.MSIState state) {
+        this.tag = tag;
+        this.state = state;
         lastCycleUsed = 0;
     }
 
@@ -29,5 +30,9 @@ public class L1CacheEntry {
 
     public void touch(int cycle) {
         lastCycleUsed = cycle;
+    }
+    
+    public int getLastCycleUsed() {
+        return lastCycleUsed;
     }
 }

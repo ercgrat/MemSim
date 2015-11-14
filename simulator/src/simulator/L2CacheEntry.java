@@ -2,10 +2,14 @@ package simulator;
 
 public class L2CacheEntry extends L1CacheEntry {
 
-    boolean[] ownerArray;
+    private boolean[] ownerArray;
 
-    public L2CacheEntry(int p) {
-        super();
+    public L2CacheEntry(int tag, Block.MSIState state, int p) {
+        super(tag, state);
         ownerArray = new boolean[(int)Math.pow(2,p)];
+    }
+    
+    public boolean[] getOwnerArray() {
+        return ownerArray;
     }
 }
