@@ -36,10 +36,9 @@ public class L1Cache {
     
     public int setState(int address, Block.MSIState state, int cycle, boolean own) {
         L1CacheEntry entry = getEntry(address);
-        if(!own){
-	    entry.setState(state);
-	}
-	else if(entry == null && state != Block.MSIState.INVALID) { // Block is not in the L1 cache
+        if(!own) {
+            entry.setState(state);
+        } else if(entry == null && state != Block.MSIState.INVALID) { // Block is not in the L1 cache
             int tag = Block.L1tag(address, p, b, n, a);
             L1CacheEntry newEntry = new L1CacheEntry(tag, state, address);
             newEntry.touch(cycle);
@@ -62,12 +61,12 @@ public class L1Cache {
             }
             
             // Set was full, evicting the LRU block
-	    int evictAddress = cache[LRUway][cacheIndex].getAddress();
+            int evictAddress = cache[LRUway][cacheIndex].getAddress();
             cache[LRUway][cacheIndex] = newEntry;
-	    return evictAddress;
+            return evictAddress;
         } else { // Block is in the L1 cache, just change the state
             entry.setState(state);
-	    entry.touch(cycle);
+            entry.touch(cycle);
         }
         
         return -1;

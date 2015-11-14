@@ -6,7 +6,6 @@ public class Block {
     private static final int pageSize = 12;
 
     public enum MSIState {
-
         MODIFIED, SHARED, INVALID
     }
 

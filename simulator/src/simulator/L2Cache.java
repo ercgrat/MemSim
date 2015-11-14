@@ -58,18 +58,13 @@ public class L2Cache {
             }
             
             // Set was full, evicting the LRU block
-            /*
-             *
-             * TODO: Get address of block being evicted, return it then invalidate all L1 owners of that block
-             *
-             */
-	    int evictAddress = cache[LRUway][cacheIndex].getAddress();
+            int evictAddress = cache[LRUway][cacheIndex].getAddress();
             cache[LRUway][cacheIndex] = newEntry;
-	    return evictAddress;
+            return evictAddress;
         } else { // Block is in the L2 cache, just change the state
             entry.setState(state);
-	    entry.touch(cycle);
-	    entry.addToOwners(tileNum);
+            entry.touch(cycle);
+            entry.addToOwners(tileNum);
         }
         
         return -1;

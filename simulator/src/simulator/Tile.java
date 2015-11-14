@@ -51,27 +51,29 @@ public class Tile {
                 
                 int delay = calculateDelay(access, tileNum, homeTile, homeState);
                 totalDelay += delay;
+                
                 int evictAddress = L1.setState(access.getAddress(), access.state, cycle, true); //Set own L1 state
-		if(evictAddress != -1){
-		    int evictHomeTile = Block.page(evictAddress, p);
-		    tiles.get(evictHomeTile).removeFromOwnersinL2(evictAddress, tileNum);
-		}
+                if(evictAddress != -1){
+                    int evictHomeTile = Block.page(evictAddress, p);
+                    tiles.get(evictHomeTile).removeFromOwnersInL2(evictAddress, tileNum);
+                }
+                
                 int L2evictAddress = tiles.get(homeTile).setL2State(access.getAddress(), access.state, cycle, tileNum);
-		if(L2evictAddress != -1){
-		    boolean[] L2evicteeOwnerArray = new boolean[(int)Math.pow(2, p)];
-		    L2evicteeOwnerArray = tiles.get(homeTile).getOwnerArray(L2evictAddress);
-		    for(int i = 0; i < (int)Math.pow(2, p); i++)
-			if(L2evicteeOwnerArray[i])
-			    tiles.get(i).setL1State(L2evictAddress, Block.MSIState.INVALID, cycle, false);
-		}
+                if(L2evictAddress != -1){
+                    boolean[] L2evicteeOwnerArray = new boolean[(int)Math.pow(2, p)];
+                    L2evicteeOwnerArray = tiles.get(homeTile).getOwnerArray(L2evictAddress);
+                    for(int i = 0; i < (int)Math.pow(2, p); i++)
+                    if(L2evicteeOwnerArray[i])
+                        tiles.get(i).setL1State(L2evictAddress, Block.MSIState.INVALID, cycle, false);
+                }
+                
                 for(int i = 0; i < (int)Math.pow(2, p); i++){
                     if(i != tileNum && ownerArray[i]){
                         if(access.read){
                             tiles.get(i).setL1State(access.getAddress(), Block.MSIState.SHARED, cycle, false);
-                        }else{
+                        } else {
                             tiles.get(i).setL1State(access.getAddress(), Block.MSIState.INVALID, cycle, false);
                         }
-                        
                     }
                 }
                 
@@ -96,8 +98,8 @@ public class Tile {
         return L2.getOwnerArray(address);
     }
     
-    public void removeFromOwnersinL2(int address, int tileNum){
-	L2.removeFromOwners(address, tileNum);
+    public void removeFromOwnersInL2(int address, int tileNum){
+        L2.removeFromOwners(address, tileNum);
     }
     
     public int calculateDelay(Access access, int tile, int home, Block.MSIState homeState) {

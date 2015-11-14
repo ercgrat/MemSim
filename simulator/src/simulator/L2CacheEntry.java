@@ -14,10 +14,10 @@ public class L2CacheEntry extends L1CacheEntry {
     }
     
     public void removeFromOwners(int tileNum){
-	ownerArray[tileNum] = false;
+        ownerArray[tileNum] = false;
     }
     
     public void addToOwners(int tileNum){
-	ownerArray[tileNum] = true;
+        ownerArray[tileNum] = true;
     }
 }

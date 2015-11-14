@@ -11,7 +11,7 @@ public class L1CacheEntry {
         this.tag = tag;
         this.state = state;
         lastCycleUsed = 0;
-	this.address = address;
+        this.address = address;
     }
 
     public int getTag() {
@@ -19,7 +19,7 @@ public class L1CacheEntry {
     }
 
     public int getAddress(){
-	return address;
+        return address;
     }
     
     public void setTag(int tag) {
