@@ -2,27 +2,27 @@ package simulator;
 
 public class L1CacheEntry {
 
-    protected int tag;
+    protected long tag;
     protected Block.MSIState state;
-    protected int lastCycleUsed;
-    private int address;
+    protected long lastCycleUsed;
+    private long address;
 
-    public L1CacheEntry(int tag, Block.MSIState state, int address) {
+    public L1CacheEntry(long tag, Block.MSIState state, long address) {
         this.tag = tag;
         this.state = state;
         lastCycleUsed = 0;
         this.address = address;
     }
 
-    public int getTag() {
+    public long getTag() {
         return tag;
     }
 
-    public int getAddress(){
+    public long getAddress(){
         return address;
     }
     
-    public void setTag(int tag) {
+    public void setTag(long tag) {
         this.tag = tag;
     }
 
@@ -34,11 +34,11 @@ public class L1CacheEntry {
         return state;
     }
 
-    public void touch(int cycle) {
+    public void touch(long cycle) {
         lastCycleUsed = cycle;
     }
     
-    public int getLastCycleUsed() {
+    public long getLastCycleUsed() {
         return lastCycleUsed;
     }
 }

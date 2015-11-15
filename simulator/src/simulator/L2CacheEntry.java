@@ -4,7 +4,7 @@ public class L2CacheEntry extends L1CacheEntry {
 
     private boolean[] ownerArray;
 
-    public L2CacheEntry(int tag, Block.MSIState state, int p, int address) {
+    public L2CacheEntry(long tag, Block.MSIState state, long p, long address) {
         super(tag, state, address);
         ownerArray = new boolean[(int)Math.pow(2,p)];
     }

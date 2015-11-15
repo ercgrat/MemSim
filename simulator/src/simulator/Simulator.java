@@ -13,7 +13,7 @@ import java.io.*;
  */
 public class Simulator {
 
-    static int p, n1, n2, b, a1, a2, C, d, d1;
+    static long p, n1, n2, b, a1, a2, C, d, d1;
     static ArrayList<Tile> tiles;
 
     /**
@@ -23,14 +23,28 @@ public class Simulator {
         if (args.length < 2) {
             System.out.println("Not enough arguments. Run with this format:\n\tjava Simulator <config> <trace file>");
         }
-        int maxCycle = 1000;
+        long maxCycle = 100;
         parseInput(args);
+		
+		boolean verbose = false;
+		if(args.length == 3 && args[2].equals("-v")) {
+			verbose = true;
+		}
 
-        int cycle = 0;
-        while (cycle < maxCycle) {
+        long cycle = 0;
+		boolean done = false;
+        while (!done) {
+			System.out.println("*********cycle " + cycle + "****************");
+			int numDone = 0;
             for (int i = 0; i < tiles.size(); i++) {
-                tiles.get(i).cycle(cycle, i);
+                if(!tiles.get(i).cycle(cycle, i, verbose)) {
+					numDone++;
+				}
             }
+			System.out.println(numDone);
+			if(numDone == tiles.size()) {
+				done = true;
+			}
             cycle++;
         }
     }
@@ -44,21 +58,21 @@ public class Simulator {
                 return;
             }
             br.readLine();
-            p = Integer.parseInt(br.readLine().split(" ")[2]);
-            n1 = Integer.parseInt(br.readLine().split(" ")[2]);
-            n2 = Integer.parseInt(br.readLine().split(" ")[2]);
-            b = Integer.parseInt(br.readLine().split(" ")[2]);
-            a1 = Integer.parseInt(br.readLine().split(" ")[2]);
-            a2 = Integer.parseInt(br.readLine().split(" ")[2]);
-            C = Integer.parseInt(br.readLine().split(" ")[2]);
-            d = Integer.parseInt(br.readLine().split(" ")[2]);
-            d1 = Integer.parseInt(br.readLine().split(" ")[2]);
+            p = Long.parseLong(br.readLine().split(" ")[2]);
+            n1 = Long.parseLong(br.readLine().split(" ")[2]);
+            n2 = Long.parseLong(br.readLine().split(" ")[2]);
+            b = Long.parseLong(br.readLine().split(" ")[2]);
+            a1 = Long.parseLong(br.readLine().split(" ")[2]);
+            a2 = Long.parseLong(br.readLine().split(" ")[2]);
+            C = Long.parseLong(br.readLine().split(" ")[2]);
+            d = Long.parseLong(br.readLine().split(" ")[2]);
+            d1 = Long.parseLong(br.readLine().split(" ")[2]);
             br.close();
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        for (int i = 0; i < (int) Math.pow(2, p); i++) {
+        for (long i = 0; i < (long) Math.pow(2, p); i++) {
             tiles.add(new Tile(tiles, p, b, n1, n2, a1, a2, d, d1, C));
         }
 
@@ -66,10 +80,10 @@ public class Simulator {
             BufferedReader br = new BufferedReader(new FileReader(args[1]));
             while (br.ready()) {
                 String[] line = br.readLine().split("\t");
-                int cycle = Integer.parseInt(line[0]);
+                long cycle = Long.parseLong(line[0]);
                 int core = Integer.parseInt(line[1]);
                 boolean read = line[2].equals("0");
-                int address = Integer.parseInt(line[3].substring(2), 16);
+                long address = Long.parseLong(line[3].substring(2).toUpperCase(), 16);
                 Access access = new Access(cycle, address, read);
                 tiles.get(core).addAccess(access);
             }

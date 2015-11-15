@@ -2,21 +2,21 @@ package simulator;
 
 public class Access {
 
-    private int cycle, address;
+    private long cycle, address;
     boolean read;
     private Block.MSIState state;
     
-    public Access(int cycle, int address, boolean read) {
+    public Access(long cycle, long address, boolean read) {
         this.cycle = cycle;
         this.address = address;
         this.read = read;
     }
 
-    public int getCycle() {
+    public long getCycle() {
         return cycle;
     }
 
-    public int getAddress() {
+    public long getAddress() {
         return address;
     }
 
@@ -34,4 +34,8 @@ public class Access {
         else
             state = Block.MSIState.MODIFIED;
     }
+	
+	public String toString() {
+		return "cycle: " + cycle + ", read: " + read + ", address: " + address;
+	}
 }
