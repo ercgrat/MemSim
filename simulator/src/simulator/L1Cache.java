@@ -85,4 +85,28 @@ public class L1Cache {
         }
         return null; // Not found
     }
+    
+    public void printCache(){
+	for(int ind = 0 ; ind < (int)Math.pow(2, n - a - b); ind++){
+	    //System.out.println("Following are the states of the blocks at index " + ind);
+	    String printLine = "Index " + ind;
+	    for(int assoc = 0; assoc < (int) Math.pow(2, a) ; assoc++ ){
+		String printState="";
+		String printAddress="";
+		if(cache[assoc][ind]==null || cache[assoc][ind].getState() == Block.MSIState.INVALID)
+		    printState = "INVALID.";
+		else if(cache[assoc][ind].getState() == Block.MSIState.SHARED){
+		    printState = "SHARED.";
+		    printAddress = " Address: 0x" + Long.toHexString(cache[assoc][ind].getAddress());
+		}
+		else if(cache[assoc][ind].getState() == Block.MSIState.MODIFIED){
+		    printState = "MODIFIED";
+		    printAddress = " Address: 0x" + Long.toHexString(cache[assoc][ind].getAddress());
+		}
+		printLine += " Column " + assoc + ": " + printState + printAddress;
+		//System.out.println("Column " + assoc + ": " + printState + printAddress);
+	    }
+	    System.out.println(printLine);
+	}
+    }
 }

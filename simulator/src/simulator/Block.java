@@ -44,7 +44,7 @@ public class Block {
         } else {
             long withoutIndexAndBlock = address / (long) Math.pow(2, indexSize + b);
             long lowerSegment = withoutIndexAndBlock % (long) Math.pow(2, pageSize - (indexSize + b));
-            long upperSegment = withoutIndexAndBlock / (long) Math.pow(2, p + (pageSize - (indexSize + b)));
+            long upperSegment = (withoutIndexAndBlock / (long) Math.pow(2, p + (pageSize - (indexSize + b)))) * (long)Math.pow(2,pageSize - (indexSize+b));
             return lowerSegment + upperSegment;
         }
     }

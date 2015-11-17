@@ -20,4 +20,9 @@ public class L2CacheEntry extends L1CacheEntry {
     public void addToOwners(int tileNum){
         ownerArray[tileNum] = true;
     }
+    
+    public void resetOwners(long p){
+	for(int i =0; i<(int)Math.pow(2,p);i++)
+	    ownerArray[i] = false;
+    }
 }

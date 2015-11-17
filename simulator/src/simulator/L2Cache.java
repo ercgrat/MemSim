@@ -36,11 +36,14 @@ public class L2Cache {
         
         L2CacheEntry entry = getEntry(address);
         if(entry == null) { // Block is not in the L2 cache
-            long tag = Block.L2tag(address, p, b, n, a);
+            //System.out.println("Address is 0x" + Long.toHexString(address));
+	    long tag = Block.L2tag(address, p, b, n, a);
+	    //System.out.println("Tag is 0x" + Long.toHexString(tag));
             L2CacheEntry newEntry = new L2CacheEntry(tag, state, p, address);
             newEntry.touch(cycle);
             newEntry.addToOwners(tileNum);
             int cacheIndex = (int)Block.L2cacheIndex(address, p, b, n, a);
+	    //System.out.println("Cache index is 0x" + Integer.toHexString(cacheIndex));
             long minLastCycle = Integer.MAX_VALUE;
             int LRUway = 0;
             
@@ -64,6 +67,8 @@ public class L2Cache {
         } else { // Block is in the L2 cache, just change the state
             entry.setState(state);
             entry.touch(cycle);
+	    if(state == Block.MSIState.MODIFIED)
+		entry.resetOwners(p);
             entry.addToOwners(tileNum);
         }
         
@@ -89,15 +94,54 @@ public class L2Cache {
     
     public L2CacheEntry getEntry(long address) {
         int cacheIndex = (int)Block.L2cacheIndex(address, p, b, n, a);
-        for (int way = 0; way < (int)Math.pow(2, a); way++) {
+        //System.out.println("Cache index is 0x" + Integer.toHexString(cacheIndex));
+	for (int way = 0; way < (int)Math.pow(2, a); way++) {
             if (cache[way][cacheIndex] != null) {
                 L2CacheEntry entry = cache[way][cacheIndex];
                 long tag = Block.L2tag(address, p, b, n, a);
                 if (entry.getTag() == tag && entry.getState() != Block.MSIState.INVALID) { // Block is in cache, return it
-                    return entry;
+                    //System.out.println("Tag is 0x" + Long.toHexString(tag));
+		    return entry;
                 }
             }
         }
         return null; // Not found
+    }
+    
+    public void printCache(){
+	for(int ind = 0 ; ind < (int)Math.pow(2, n - a - b); ind++){
+	    //System.out.println("Following are the states of the blocks at index " + ind);
+	    String printLine = "Index " + ind;
+	    for(int assoc = 0; assoc < (int) Math.pow(2, a) ; assoc++ ){
+		String printState="";
+		String printAddress="";
+		String ownerTiles = "";
+		if(cache[assoc][ind]==null || cache[assoc][ind].getState() == Block.MSIState.INVALID)
+		    printState = "INVALID.";
+		else if(cache[assoc][ind].getState() == Block.MSIState.SHARED){
+		    printState = "SHARED.";
+		    printAddress = " Address: 0x" + Long.toHexString(cache[assoc][ind].getAddress()) + ".";
+		    boolean[] ownerArray = cache[assoc][ind].getOwnerArray();
+		    ownerTiles = " Sharer tile numbers :";
+		    for(int i = 0; i<(int)Math.pow(2,p);i++){
+			if(ownerArray[i])
+			    ownerTiles += " "+i+",";
+		    }
+		}
+		else if(cache[assoc][ind].getState() == Block.MSIState.MODIFIED){
+		    printState = "MODIFIED.";
+		    printAddress = " Address: 0x" + Long.toHexString(cache[assoc][ind].getAddress()) + ".";
+		    boolean[] ownerArray = cache[assoc][ind].getOwnerArray();
+		    ownerTiles = " Owner tile :";
+		    for(int i = 0; i<(int)Math.pow(2,p);i++){
+			if(ownerArray[i])
+			    ownerTiles += " "+i+" ";
+		    }
+		}
+		printLine += " Column " + assoc + ": " + printState + printAddress + ownerTiles;
+		//System.out.println("Column " + assoc + ": " + printState + printAddress + ownerTiles);
+	    }
+	    System.out.println(printLine);
+	}
     }
 }
