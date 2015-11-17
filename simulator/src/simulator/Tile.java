@@ -73,7 +73,10 @@ public class Tile {
 		totalDelay += delay;
 		if(verbose)
 		    System.out.println("Total delay for this access would be " + delay);
-		stats.incrementDataMsg();
+		if(access.accessType() || !(L1.getState(access.getAddress())==Block.MSIState.SHARED))
+		    stats.incrementDataMsg();
+		else
+		    stats.incrementControlMsg();
 		long evictAddress = L1.setState(access.getAddress(), access.getState(), cycle, true); //Set own L1 state
 		if (evictAddress != -1) {
 		    int evictHomeTile = (int) Block.page(evictAddress, p);

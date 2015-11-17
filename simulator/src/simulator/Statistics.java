@@ -61,8 +61,8 @@ public class Statistics {
     
     public float[][] getHitRates(){
 	for(int i = 0 ; i < (int)Math.pow(2,p); i++){
-	    hitRates[i][0] = numAccesses[i]==0 ? 0 : ((float)numAccesses[i] - (float)numMisses[i][0]) / (float)numAccesses[i];
-	    hitRates[i][1] = numL2Accesses[i]==0 ? 0 : ((float)numL2Accesses[i] - (float)numMisses[i][1]) / (float)numL2Accesses[i];
+	    hitRates[i][0] = numAccesses[i]==0 ? -1 : ((float)numAccesses[i] - (float)numMisses[i][0]) / (float)numAccesses[i];
+	    hitRates[i][1] = numL2Accesses[i]==0 ? -1 : ((float)numL2Accesses[i] - (float)numMisses[i][1]) / (float)numL2Accesses[i];
 	}
 	return hitRates;
     }

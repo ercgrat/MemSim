@@ -61,8 +61,14 @@ public class Simulator {
 	int[] numCycles = stats.numCycles;
 	for (int i= 0; i < tiles.size(); i++){
 	    System.out.println("Number of cycles to finish execution of tile " + i + " is " + numCycles[i]);
-	    System.out.println("Hit rate in L1 of tile " + i + " is " + hitRates[i][0]);
-	    System.out.println("Hit rate in L2 of tile " + i + " is " + hitRates[i][1]);
+	    if(hitRates[i][0]==-1)
+		System.out.println("No accesses in L1 of tile " + i);
+	    else
+		System.out.println("Hit rate in L1 of tile " + i + " is " + hitRates[i][0]);
+	    if(hitRates[i][1]==-1)
+		System.out.println("No accesses in L2 of tile " + i);
+	    else
+		System.out.println("Hit rate in L2 of tile " + i + " is " + hitRates[i][1]);
 	    System.out.println("Average miss penalty in L1 of tile " + i + " is " + avgMissPens[i]);
 	}
 	System.out.println("Total number of control(short) messages is " + stats.controlMsgs);
