@@ -51,6 +51,8 @@ public class Tile {
 	if (access.getCycle() <= (cycle - totalDelay)) {
 	    numAccesses++;
 	    stats.incrementL1Accesses(tileNum);
+		System.out.println(access);
+		System.out.println(L1.hit(access.getAddress(), cycle, access.accessType()));
 	    if (!L1.hit(access.getAddress(), cycle, access.accessType())) { // L1 cache miss, all the logic kicks in
 		stats.incrementL1Misses(tileNum);
 		if(verbose)
@@ -63,7 +65,10 @@ public class Tile {
 		stats.incrementControlMsg();
 		boolean[] ownerArray = new boolean[(int) Math.pow(2, p)];
 		if (homeState == Block.MSIState.MODIFIED || homeState == Block.MSIState.SHARED) {
-		    ownerArray = tiles.get(homeTile).getOwnerArray(access.getAddress());
+			boolean[] existingOwners = tiles.get(homeTile).getOwnerArray(access.getAddress());
+			for(int i = 0; i < existingOwners.length; i++) {
+				ownerArray[i] = existingOwners[i];
+			}
 		}
 		else
 		    stats.incrementL2Misses(homeTile);
@@ -77,6 +82,7 @@ public class Tile {
 		    stats.incrementDataMsg();
 		else
 		    stats.incrementControlMsg();
+		
 		long evictAddress = L1.setState(access.getAddress(), access.getState(), cycle, true); //Set own L1 state
 		if (evictAddress != -1) {
 		    int evictHomeTile = (int) Block.page(evictAddress, p);
@@ -85,7 +91,7 @@ public class Tile {
 		    tiles.get(evictHomeTile).removeFromOwnersInL2(evictAddress, tileNum);
 		    stats.incrementControlMsg();
 		}
-
+		
 		L2CacheEntry L2evictedEntry = tiles.get(homeTile).setL2State(access.getAddress(), access.getState(), cycle, tileNum);
 		if (L2evictedEntry != null) {
 		    long L2evictAddress = L2evictedEntry.getAddress();
@@ -97,13 +103,14 @@ public class Tile {
 			}
 		    }
 		}
-
+		
 		for (int i = 0; i < (int) Math.pow(2, p); i++) {
 		    if (i != tileNum && ownerArray[i]) {
 			if (access.read && homeState == Block.MSIState.MODIFIED) {
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.SHARED, cycle, false);
 			    stats.incrementControlMsg();
 			} else {
+				System.out.println("Invalidating this block for tile " + i);
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.INVALID, cycle, false);
 			    stats.incrementControlMsg();
 			}
@@ -141,6 +148,7 @@ public class Tile {
 	    }
 	    else{
 		if(verbose){
+			System.out.println("The state in L1 was " + L1.getState(access.getAddress()));
 		    System.out.println("L1 hit in tile: " + tileNum + " at cycle: " + cycle + " when trying to " + readWrite +" address 0x" +hexAddress);
 		    System.out.println("No changes in state required for this access.");
 		}

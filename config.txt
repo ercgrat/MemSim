@@ -1,5 +1,5 @@
 // Do not change the format of this segment. Leave spaces padding the = signs.
-p = 4
+p = 2
 n1 = 7
 n2 = 10
 b = 4
