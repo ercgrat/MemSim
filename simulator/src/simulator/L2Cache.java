@@ -42,9 +42,7 @@ public class L2Cache {
             L2CacheEntry newEntry = new L2CacheEntry(tag, state, p, address);
             newEntry.touch(cycle);
             newEntry.addToOwners(tileNum);
-			for(int i = 0; i < newEntry.getOwnerArray().length; i++) { System.out.print("NEWENTRY: "); System.out.print(i + ": " + newEntry.getOwnerArray()[i] + ", "); }
-            int cacheIndex = (int)Block.L2cacheIndex(address, p, b, n, a);
-			System.out.println("L2 setState cache index is " + cacheIndex);
+			int cacheIndex = (int)Block.L2cacheIndex(address, p, b, n, a);
 	    //System.out.println("Cache index is 0x" + Integer.toHexString(cacheIndex));
             long minLastCycle = Integer.MAX_VALUE;
             int LRUway = 0;

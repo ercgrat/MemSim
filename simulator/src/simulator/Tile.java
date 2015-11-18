@@ -51,8 +51,6 @@ public class Tile {
 	if (access.getCycle() <= (cycle - totalDelay)) {
 	    numAccesses++;
 	    stats.incrementL1Accesses(tileNum);
-		System.out.println(access);
-		System.out.println(L1.hit(access.getAddress(), cycle, access.accessType()));
 	    if (!L1.hit(access.getAddress(), cycle, access.accessType())) { // L1 cache miss, all the logic kicks in
 		stats.incrementL1Misses(tileNum);
 		if(verbose)
@@ -109,7 +107,7 @@ public class Tile {
 			if (access.read && homeState == Block.MSIState.MODIFIED) {
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.SHARED, cycle, false);
 			    stats.incrementControlMsg();
-			} else {
+			} else if(!access.read) {
 				System.out.println("Invalidating this block for tile " + i);
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.INVALID, cycle, false);
 			    stats.incrementControlMsg();
@@ -132,7 +130,7 @@ public class Tile {
 			if (i != tileNum && ownerArray[i]) {
 			    if (access.read && homeState == Block.MSIState.MODIFIED) {
 				System.out.println("The requested block with address: 0x" + hexAddress + "is now set to SHARED in L1 of tile " + i);
-			    } else {
+			    } else if(!access.read) {
 				System.out.println("The requested block with address: 0x" + hexAddress + "is now INVALIDATED in L1 of tile " + i);
 			    }
 			}
@@ -183,12 +181,16 @@ public class Tile {
     public boolean[] getOwnerArray(long address) { //return owner array, number of entries depends on output of getL2State
 	return L2.getOwnerArray(address);
     }
+	
+	public long getOwner(long address) {
+		return L2.getOwner(address);
+	}
 
     public void removeFromOwnersInL2(long address, int tileNum) {
 	L2.removeFromOwners(address, tileNum);
     }
 
-    public long calculateDelay(Access access, int tile, long home, Block.MSIState homeState) {
+    public long calculateDelay(Access access, int tile, int home, Block.MSIState homeState) {
 	long delay = d + Block.manhattanDistance((long) tile, home, p) * 2 * C;
 	if (access.accessType()) { // Reading, L1 state is invalid
 	    if (homeState == Block.MSIState.INVALID) { // L2 miss, need to contact memory controller and load block
@@ -198,7 +200,7 @@ public class Tile {
 	    } else if (homeState == Block.MSIState.SHARED) { // L2 hit, no additional penalty
 		// :)
 	    } else if (homeState == Block.MSIState.MODIFIED) { // L2 miss, need to contact the current owner
-		long owner = L2.getOwner(access.getAddress());
+		long owner = tiles.get(home).getOwner(access.getAddress());
 		delay += Block.manhattanDistance(home, owner, p) * 2 * C;
 		//stats.incrementControlMsg();
 		stats.incrementDataMsg();

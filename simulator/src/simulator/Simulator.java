@@ -60,7 +60,6 @@ public class Simulator {
 	float[][] hitRates = stats.getHitRates();
 	int[] numCycles = stats.numCycles;
 	for (int i= 0; i < tiles.size(); i++){
-		System.out.println(stats.numAccesses[i] + " : " + stats.numMisses[i][0]);
 	    System.out.println("Number of cycles to finish execution of tile " + i + " is " + numCycles[i]);
 	    if(hitRates[i][0]==-1)
 		System.out.println("No accesses in L1 of tile " + i);
