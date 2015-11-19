@@ -108,7 +108,7 @@ public class Tile {
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.SHARED, cycle, false);
 			    stats.incrementControlMsg();
 			} else if(!access.read) {
-				System.out.println("Invalidating this block for tile " + i);
+				//System.out.println("Invalidating this block for tile " + i);
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.INVALID, cycle, false);
 			    stats.incrementControlMsg();
 			}
@@ -146,8 +146,9 @@ public class Tile {
 	    }
 	    else{
 		if(verbose){
-			System.out.println("The state in L1 was " + L1.getState(access.getAddress()));
+			
 		    System.out.println("L1 hit in tile: " + tileNum + " at cycle: " + cycle + " when trying to " + readWrite +" address 0x" +hexAddress);
+		    System.out.println("The state in L1 was already " + L1.getState(access.getAddress()));
 		    System.out.println("No changes in state required for this access.");
 		}
 	    }
