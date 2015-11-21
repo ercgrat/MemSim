@@ -145,8 +145,9 @@ public class Tile {
 	    }
 	    else{
 		if(verbose){
-			System.out.println("The state in L1 was " + L1.getState(access.getAddress()));
+			
 		    System.out.println("L1 hit in tile: " + tileNum + " at cycle: " + cycle + " when trying to " + readWrite +" address 0x" +hexAddress);
+		    System.out.println("The state in L1 was already " + L1.getState(access.getAddress()));
 		    System.out.println("No changes in state required for this access.");
 		}
 	    }
