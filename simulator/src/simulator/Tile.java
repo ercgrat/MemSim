@@ -108,7 +108,6 @@ public class Tile {
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.SHARED, cycle, false);
 			    stats.incrementControlMsg();
 			} else if(!access.read) {
-				System.out.println("Invalidating this block for tile " + i);
 			    tiles.get(i).setL1State(access.getAddress(), Block.MSIState.INVALID, cycle, false);
 			    stats.incrementControlMsg();
 			}

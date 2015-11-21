@@ -1,13 +1,13 @@
 // Do not change the format of this segment. Leave spaces padding the = signs.
-p = 2
-n1 = 7
-n2 = 10
-b = 4
+p = 4
+n1 = 14
+n2 = 20
+b = 5
 a1 = 2
 a2 = 2
-C = 1
-d = 1
-d1 = 2
+C = 3
+d = 3
+d1 = 100
 
 // It is safe to add any information after this line.
 

@@ -1,0 +1,66 @@
+Number of cycles to finish execution of tile 0 is 4608
+Hit rate in L1 of tile 0 is 0.60465115
+Hit rate in L2 of tile 0 is 0.0
+Average miss penalty in L1 of tile 0 is 131.35294
+Number of cycles to finish execution of tile 1 is 93843
+Hit rate in L1 of tile 1 is 0.9961668
+Hit rate in L2 of tile 1 is 0.07058824
+Average miss penalty in L1 of tile 1 is 211.79144
+Number of cycles to finish execution of tile 2 is 89991
+Hit rate in L1 of tile 2 is 0.9961668
+Hit rate in L2 of tile 2 is 0.025974026
+Average miss penalty in L1 of tile 2 is 191.19252
+Number of cycles to finish execution of tile 3 is 90937
+Hit rate in L1 of tile 3 is 0.9959813
+Hit rate in L2 of tile 3 is 0.058419243
+Average miss penalty in L1 of tile 3 is 187.2449
+Number of cycles to finish execution of tile 4 is 91886
+Hit rate in L1 of tile 4 is 0.9960018
+Hit rate in L2 of tile 4 is 0.049808428
+Average miss penalty in L1 of tile 4 is 193.0718
+Number of cycles to finish execution of tile 5 is 86706
+Hit rate in L1 of tile 5 is 0.9960018
+Hit rate in L2 of tile 5 is 0.0
+Average miss penalty in L1 of tile 5 is 166.50769
+Number of cycles to finish execution of tile 6 is 83719
+Hit rate in L1 of tile 6 is 0.9961668
+Hit rate in L2 of tile 6 is 0.024590164
+Average miss penalty in L1 of tile 6 is 157.6524
+Number of cycles to finish execution of tile 7 is 84981
+Hit rate in L1 of tile 7 is 0.99609435
+Hit rate in L2 of tile 7 is 0.0
+Average miss penalty in L1 of tile 7 is 172.1828
+Number of cycles to finish execution of tile 8 is 87962
+Hit rate in L1 of tile 8 is 0.9961464
+Hit rate in L2 of tile 8 is 0.024793388
+Average miss penalty in L1 of tile 8 is 179.38298
+Number of cycles to finish execution of tile 9 is 91566
+Hit rate in L1 of tile 9 is 0.9960018
+Hit rate in L2 of tile 9 is 0.0
+Average miss penalty in L1 of tile 9 is 191.43077
+Number of cycles to finish execution of tile 10 is 86666
+Hit rate in L1 of tile 10 is 0.9960018
+Hit rate in L2 of tile 10 is 0.0
+Average miss penalty in L1 of tile 10 is 166.30257
+Number of cycles to finish execution of tile 11 is 85865
+Hit rate in L1 of tile 11 is 0.9959795
+Hit rate in L2 of tile 11 is 0.3583815
+Average miss penalty in L1 of tile 11 is 176.30527
+Number of cycles to finish execution of tile 12 is 94706
+Hit rate in L1 of tile 12 is 0.9960018
+Hit rate in L2 of tile 12 is 0.51666665
+Average miss penalty in L1 of tile 12 is 207.53334
+Number of cycles to finish execution of tile 13 is 91135
+Hit rate in L1 of tile 13 is 0.9961668
+Hit rate in L2 of tile 13 is 0.0
+Average miss penalty in L1 of tile 13 is 197.31017
+Number of cycles to finish execution of tile 14 is 88947
+Hit rate in L1 of tile 14 is 0.9961668
+Hit rate in L2 of tile 14 is 0.0
+Average miss penalty in L1 of tile 14 is 185.60962
+Number of cycles to finish execution of tile 15 is 89827
+Hit rate in L1 of tile 15 is 0.9961668
+Hit rate in L2 of tile 15 is 0.6545454
+Average miss penalty in L1 of tile 15 is 190.3155
+Total number of control(short) messages is 5739
+Total number of data(long) messages is 5522
